@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* Clase para ocultar la barra de desplazamiento */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  /* Ocultar la barra de desplazamiento en todos los navegadores */
+  ::-webkit-scrollbar {
+    display: none; /* Para navegadores basados en WebKit como Chrome y Safari */
+  }
+  
+  .show-scrollbar {
+    padding: 10px; /* Padding en el eje X (izquierda y derecha) */
+  }
+  
+  .show-scrollbar::-webkit-scrollbar {
+    display: block !important; /* Muestra la barra de desplazamiento */
+    width: 6px !important; /* Ancho de la barra de desplazamiento */
+  }
