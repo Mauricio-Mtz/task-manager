@@ -5,16 +5,12 @@ import Navbar from '@/components/elements/navbar'
 import { useNavigate } from 'react-router-dom'
 
 function LoginPage() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: '', password: '' })
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({ 
+    email: '', 
+    password: '' 
+  })
   const [error, setError] = useState('')
-
-  // Usuario hardcodeado
-  const validUser = {
-    email: 'mauri@gmail.com',
-    password: 'ABcd12!"'
-  }
-
   const handleChange = (event) => {
     setFormData({
       ...formData,
@@ -23,24 +19,47 @@ function LoginPage() {
     // Limpiar mensaje de error cuando el usuario empiece a escribir
     setError('')
   }
-
-  const handleSubmit = (event) => {
+  
+  // Función flecha para el inicio de sesión del usuario
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    
+
     // Validar campos vacíos
     if (!formData.email || !formData.password) {
       setError('Por favor, completa todos los campos')
       return
     }
+    // Intentar hacer la petición al backend
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
+      const data = await response.json()
 
-    // Validar credenciales
-    if (formData.email === validUser.email && formData.password === validUser.password) {
-      // Simular guardado de sesión
-      localStorage.setItem('isLoggedIn', 'true')
-      // Redirigir al dashboard
-      navigate('/manager/dashboard')
-    } else {
-      setError('Credenciales incorrectas')
+      if (response.ok) {
+        // Inicio de sesion en caso de exito
+        // Guardar el token en localStorage
+        localStorage.setItem('token', data.token)
+        // Guardar información del usuario si es necesario
+        localStorage.setItem('user', JSON.stringify(data.user))
+        // Guardar estado de login
+        localStorage.setItem('isLoggedIn', 'true')
+        // Redirigir al dashboard
+        navigate('/manager/dashboard')
+      } else {
+        // Mostrar mensaje de error del servidor
+        setError(data.error || 'Error al iniciar sesión')
+      }
+    } catch (error) {
+      setError('Error de conexión. Intente nuevamente.')
+      console.error('Error:', error)
     }
   }
 
@@ -48,13 +67,13 @@ function LoginPage() {
     <div>
       <Navbar />
       <div className="flex items-center justify-center h-screen">
-        <div className="flex flex-col items-center gap-2 border p-6 rounded-2xl w-full max-w-md mx-4">
+        <div className="bg-slate-400 flex flex-col items-center gap-2 border border-slate-900 p-6 rounded-2xl w-full max-w-md mx-4">
           <div className="text-2xl font-bold mb-4">
             <h1>Inicio de sesión</h1>
           </div>
 
           {error && (
-            <div className="w-full p-3 mb-4 text-sm text-red-500 bg-red-100 rounded-lg">
+            <div className="w-full p-3 mb-4 text-sm text-red-500 bg-red-200 rounded-lg">
               {error}
             </div>
           )}
@@ -90,22 +109,27 @@ function LoginPage() {
               />
             </div>
 
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               variant="default"
-              className="w-full mt-2"
+              className="w-full mt-2 bg-slate-500 hover:bg-slate-600"
             >
               Acceder
             </Button>
           </form>
-
-          <div className="mt-4 text-sm text-gray-500">
-            Usuario de prueba: test@test.com / 123456
-          </div>
+          <p className="text-center text-sm mt-2">
+            ¿No tienes cuenta?
+            <button
+              type="button"
+              onClick={() => navigate('/register')}
+              className="text-blue-600 hover:text-blue-700"
+            >
+              Crea una
+            </button>
+          </p>
         </div>
       </div>
     </div>
   )
 }
-
 export default LoginPage
