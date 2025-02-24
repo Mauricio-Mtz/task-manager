@@ -25,12 +25,12 @@ export function Sidebar() {
     {
       title: 'Tareas',
       icon: <ListTodoIcon className="w-5 h-5" />,
-      path: '/manager/tasks',
+      path: '/manager/userTasks',
     },
     {
-      title: 'Estadísticas',
+      title: 'Grupos',
       icon: <BarChartIcon className="w-5 h-5" />,
-      path: '/manager/staditics',
+      path: '/manager/groups',
     },
   ]
 

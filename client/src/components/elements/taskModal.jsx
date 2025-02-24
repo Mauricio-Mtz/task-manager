@@ -6,16 +6,16 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useState } from 'react'
 
-const TaskModal = ({ open, onOpenChange, onSubmit }) => {
-  // Estado para almacenar los datos de la tarea
+const TaskModal = ({ open, users, type, onOpenChange, onSubmit }) => {
   const [formData, setFormData] = useState({
     name_task: '',
     description: '',
     dead_line: '',
-    status: '',
+    status: 'in_progress',
     category: '',
+    user_id: null,
   })
-  // Función flecha para returnar la informacion a insertar
+
   const handleSubmit = (e) => {
     e.preventDefault()
     onSubmit(formData)
@@ -23,8 +23,9 @@ const TaskModal = ({ open, onOpenChange, onSubmit }) => {
       name_task: '',
       description: '',
       dead_line: '',
-      status: '',
+      status: 'in_progress',
       category: '',
+      user_id: '',
     })
   }
 
@@ -95,6 +96,32 @@ const TaskModal = ({ open, onOpenChange, onSubmit }) => {
               }
             />
           </div>
+          {type === "group" && (
+            <div className="grid gap-2">
+              <Label htmlFor="assigned_user">Asignar Usuario</Label>
+              <Select
+                onValueChange={(value) =>
+                  setFormData({ ...formData, user_id: value })
+                }
+                value={formData.assigned_user}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecciona un usuario" />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-400">
+                  {users.map((user) => (
+                    <SelectItem
+                      key={user._id}
+                      className="hover:bg-slate-500"
+                      value={user._id}
+                    >
+                      {user.username}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <Button className="bg-slate-500 hover:bg-slate-600" type="submit">
             Guardar Tarea
           </Button>

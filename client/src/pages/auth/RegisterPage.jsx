@@ -1,79 +1,17 @@
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import Navbar from '@/components/elements/navbar';
-import { useNavigate } from 'react-router-dom';
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
+import Navbar from '@/components/elements/navbar'
+import { useAuth } from '@/hooks/useAuth'
 
 function RegisterPage() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    username: '',
-    confirmPassword: '',
-  });
-  const [error, setError] = useState('');
+  const navigate = useNavigate()
+  const { formData, error, handleChange, handleRegister } = useAuth()
 
-  const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
-    // Limpiar mensaje de error cuando el usuario empiece a escribir
-    setError('');
-  };
-
-  // Función flecha para el registro del usuario
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    // Validar que se ingresaron todos los datos
-    if (!formData.email || !formData.password || !formData.username) {
-      setError('Por favor, completa todos los campos');
-      return;
-    }
-    // Validar que las contraseñas coincidan
-    if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden');
-      return;
-    }
-    // Validar formato de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError('Por favor, ingresa un correo electrónico válido');
-      return;
-    }
-    // Validar longitud de la contraseña
-    if (formData.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
-      return;
-    }
-    // Intentar hacer la petición al backend
-    try {
-      const response = await fetch('http://localhost:3000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          username: formData.username,
-        }),
-      });
-      const data = await response.json();
-
-      if (response.ok) {
-        // Registro en caso de exito
-        navigate('/login');
-      } else {
-        // Mostrar mensaje de error del servidor
-        setError(data.error || 'Error al registrar usuario');
-      }
-    } catch (error) {
-      setError('Error de conexión. Intente nuevamente.');
-      console.error('Error:', error);
-    }
-  };
+    event.preventDefault()
+    await handleRegister(navigate)
+  }
 
   return (
     <div>
@@ -160,10 +98,10 @@ function RegisterPage() {
             </Button>
 
             <p className="text-center text-sm mt-2">
-                ¿Ya tienes cuenta?
+              ¿Ya tienes cuenta?
               <button
                 type="button"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/auth/login')}
                 className="text-blue-600 hover:text-blue-700"
               >
                 Inicia sesión
@@ -173,7 +111,7 @@ function RegisterPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default RegisterPage;
+export default RegisterPage

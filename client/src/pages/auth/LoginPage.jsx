@@ -1,66 +1,16 @@
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
-import Navbar from '@/components/elements/navbar'
 import { useNavigate } from 'react-router-dom'
+import Navbar from '@/components/elements/navbar'
+import { useAuth } from '@/hooks/useAuth'
 
 function LoginPage() {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState({ 
-    email: '', 
-    password: '' 
-  })
-  const [error, setError] = useState('')
-  const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    })
-    // Limpiar mensaje de error cuando el usuario empiece a escribir
-    setError('')
-  }
-  
-  // Función flecha para el inicio de sesión del usuario
+  const { formData, error, handleChange, handleLogin } = useAuth()
+
   const handleSubmit = async (event) => {
     event.preventDefault()
-
-    // Validar campos vacíos
-    if (!formData.email || !formData.password) {
-      setError('Por favor, completa todos los campos')
-      return
-    }
-    // Intentar hacer la petición al backend
-    try {
-      const response = await fetch('http://localhost:3000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      })
-      const data = await response.json()
-
-      if (response.ok) {
-        // Inicio de sesion en caso de exito
-        // Guardar el token en localStorage
-        localStorage.setItem('token', data.token)
-        // Guardar información del usuario si es necesario
-        localStorage.setItem('user', JSON.stringify(data.user))
-        // Guardar estado de login
-        localStorage.setItem('isLoggedIn', 'true')
-        // Redirigir al dashboard
-        navigate('/manager/dashboard')
-      } else {
-        // Mostrar mensaje de error del servidor
-        setError(data.error || 'Error al iniciar sesión')
-      }
-    } catch (error) {
-      setError('Error de conexión. Intente nuevamente.')
-      console.error('Error:', error)
-    }
+    await handleLogin(navigate)
   }
 
   return (
@@ -121,7 +71,7 @@ function LoginPage() {
             ¿No tienes cuenta?
             <button
               type="button"
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/auth/register')}
               className="text-blue-600 hover:text-blue-700"
             >
               Crea una
@@ -132,4 +82,5 @@ function LoginPage() {
     </div>
   )
 }
+
 export default LoginPage

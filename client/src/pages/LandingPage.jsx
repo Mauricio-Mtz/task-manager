@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
+
 import MainLayout from '@/layouts/MainLayout'
+
 function LandingPage() {
   return (
     <MainLayout>
@@ -15,7 +17,7 @@ function LandingPage() {
           </p>
           <div>
             <Link
-              to="/login"
+              to="/auth/login"
               className="inline-block px-8 py-4 text-lg bg-slate-600 hover:bg-slate-800 text-white rounded-lg transition-colors duration-200"
             >
               Comenzar ahora

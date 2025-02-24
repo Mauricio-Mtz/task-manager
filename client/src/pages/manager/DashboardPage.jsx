@@ -1,8 +1,10 @@
-import Sidebar from '@/components/elements/Sidebar'
-import Navbar from '@/components/elements/navbar'
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { User } from 'lucide-react'
+
+import Sidebar from '@/components/elements/Sidebar'
+import Navbar from '@/components/elements/navbar'
+
 function DashboardPage() {
   const [userData, setUserData] = useState(null)
   useEffect(() => {
@@ -26,8 +28,11 @@ function DashboardPage() {
     })
   }
   return (
-    <div><Navbar /><div className="flex min-h-screen pt-16">
-        <Sidebar /><div className="flex-1 p-8 relative">
+    <div>
+      <Navbar />
+      <div className="flex min-h-screen pt-16">
+        <Sidebar />
+        <div className="flex-1 p-8 relative">
           <h1 className="text-3xl text-center font-bold text-slate-400 mb-6">
             Dashboard
           </h1>
@@ -50,9 +55,7 @@ function DashboardPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <h2 className="text-2xl font-bold">Último acceso:</h2>
-                  <h3 className="text-xl">
-                    {formatDate(userData.last_login)}
-                  </h3>
+                  <h3 className="text-xl">{formatDate(userData.last_login)}</h3>
                 </div>
               </CardContent>
             </Card>

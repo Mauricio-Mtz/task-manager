@@ -12,7 +12,7 @@ const Navbar = () => {
                     <Link to="/manager/dashboard" className="text-white hover:text-gray-300">Dashboard</Link>
                 </li>
                 <li>
-                    <Link to="/Login" className="text-white hover:text-gray-300">Accede</Link>
+                    <Link to="/auth/Login" className="text-white hover:text-gray-300">Accede</Link>
                 </li>
             </ul>
         </nav>
