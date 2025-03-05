@@ -1,29 +1,24 @@
 import { useState, useEffect } from 'react'
+import { taskService } from '../services/taskService'
 
-// Hook personalizado para gestionar las funciones de tareas.
 export const useTasks = (groupId) => {
-  // Estado para almacenar las tareas.
+  // Estado para almacenar las tareas
   const [tasks, setTasks] = useState([])
-  // Estado para manejar errores en las solicitudes.
+  // Estado para manejar errores en las solicitudes
   const [error, setError] = useState(null)
 
-  // Obtiene la lista de tareas del usuario o del grupo si se proporciona un groupId.
+  // Obtiene la lista de tareas del usuario o del grupo si se proporciona un groupId
   const fetchTasks = async () => {
     try {
-      const token = localStorage.getItem('token')
-      let url = 'http://localhost:3000/tasks/listTasksByUser'
-      if (groupId) {
-        url = `http://localhost:3000/tasks/listTasksByGroup/${groupId}`
-      }
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await response.json()
+      let data
 
-      if (response.ok) {
+      if (groupId) {
+        data = await taskService.getGroupTasks(groupId)
+      } else {
+        data = await taskService.getUserTasks()
+      }
+
+      if (data.tasks) {
         setTasks(data.tasks)
       } else {
         setError(data.error || 'Error al obtener las tareas')
@@ -34,30 +29,18 @@ export const useTasks = (groupId) => {
     }
   }
 
-  // Crea una nueva tarea con la información proporcionada.
+  // Crea una nueva tarea con la información proporcionada
   const createTask = async (taskData) => {
-    console.log('taskData', taskData)
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/tasks/create', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nameTask: taskData.name_task,
-          description: taskData.description,
-          deadLine: taskData.dead_line,
-          status: taskData.status,
-          category: taskData.category,
-          personalUserId: taskData.user_id,
-          groupId: groupId,
-        }),
-      })
-      const data = await response.json()
+      // Asegurarse de que groupId esté incluido en taskData
+      const taskDataWithGroup = {
+        ...taskData,
+        group_id: groupId,
+      }
 
-      if (response.ok) {
+      const data = await taskService.createTask(taskDataWithGroup)
+
+      if (data.success) {
         await fetchTasks()
         return true
       } else {
@@ -71,23 +54,12 @@ export const useTasks = (groupId) => {
     }
   }
 
-  // Elimina una tarea según su ID.
+  // Elimina una tarea según su ID
   const deleteTask = async (taskId) => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(
-        `http://localhost:3000/tasks/delete/${taskId}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      const data = await taskService.deleteTask(taskId)
 
-      const data = await response.json()
-
-      if (response.ok) {
+      if (data.success) {
         await fetchTasks()
         return true
       } else {
@@ -101,25 +73,13 @@ export const useTasks = (groupId) => {
     }
   }
 
-  // Actualiza el estado de una tarea según su ID.
+  // Actualiza el estado de una tarea según su ID
   const updateTaskStatus = async (taskId, newStatus) => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(
-        `http://localhost:3000/tasks/updateStatus/${taskId}`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ status: newStatus }),
-        }
-      )
+      const data = await taskService.updateTaskStatus(taskId, newStatus)
 
-      const data = await response.json()
-
-      if (response.ok) {
+      if (data.success) {
+        // Actualizar el estado local para evitar una nueva petición
         const updatedTasks = tasks.map((task) =>
           task.id === taskId ? { ...task, status: newStatus } : task
         )
@@ -137,12 +97,11 @@ export const useTasks = (groupId) => {
     }
   }
 
-  // Ejecuta fetchTasks cuando cambia el groupId para actualizar las tareas.
+  // Ejecuta fetchTasks cuando cambia el groupId para actualizar las tareas
   useEffect(() => {
     fetchTasks()
   }, [groupId])
 
-  // Retorna la lista de tareas, errores y funciones para crear, eliminar y actualizar tareas.
   return {
     tasks,
     error,

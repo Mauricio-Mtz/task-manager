@@ -1,8 +1,17 @@
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '@/components/elements/navbar'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/index'
 
 function RegisterPage() {
   const navigate = useNavigate()
@@ -29,6 +38,28 @@ function RegisterPage() {
           )}
 
           <form className="flex flex-col w-full gap-3" onSubmit={handleSubmit}>
+            <div className="space-y-1">
+              <label htmlFor="username" className="text-sm font-medium">
+                Tipo de cuenta:
+              </label>
+              <Select
+                onValueChange={(value) =>
+                  handleChange({ target: { name: 'type', value } })
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecciona tipo de cuenta" />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-500">
+                  <SelectGroup>
+                    <SelectLabel>Tipos</SelectLabel>
+                    <SelectItem value="user">Usuario</SelectItem>
+                    <SelectItem value="creator">Creador</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="space-y-1">
               <label htmlFor="username" className="text-sm font-medium">
                 Nombre de usuario:

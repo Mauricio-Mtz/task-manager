@@ -1,34 +1,19 @@
 import { useState, useEffect } from 'react'
+import { authService } from '../services/authService'
 
-// Hook personalizado para gestionar las funciones de usuarios
 export const useUsers = ({ groupId }) => {
   // Estado para almacenar los usuarios asociados a un grupo
   const [usersByGroup, setUsersByGroup] = useState([])
   // Estado para manejar errores en las solicitudes
   const [error, setError] = useState(null)
 
-  // Función para obtener los usuarios asociados a un grupo desde la API
+  // Función para obtener los usuarios asociados a un grupo
   const fetchUsersByGroup = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(
-        `http://localhost:3000/auth/listUsersByGroup/${groupId}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      const data = await response.json()
+      const data = await authService.getUsersByGroup(groupId)
 
-      // Verifica si la respuesta es exitosa y actualiza el estado
-      if (response.ok) {
-        if (data.success) {
-          setUsersByGroup(data.users)
-        } else {
-          setError(data.error || 'Error al obtener los usuarios')
-        }
+      if (data.success) {
+        setUsersByGroup(data.users)
       } else {
         setError(data.error || 'Error al obtener los usuarios')
       }
@@ -38,12 +23,13 @@ export const useUsers = ({ groupId }) => {
     }
   }
 
-  // Efecto para obtener los usuarios cuando el componente se monta
+  // Efecto para obtener los usuarios cuando el componente se monta o cambia el groupId
   useEffect(() => {
-    fetchUsersByGroup()
-  }, [])
+    if (groupId) {
+      fetchUsersByGroup()
+    }
+  }, [groupId])
 
-  // Retorna la lista de usuarios, errores y la función para recargar los datos
   return {
     usersByGroup,
     error,

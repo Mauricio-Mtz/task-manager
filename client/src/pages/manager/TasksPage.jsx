@@ -10,8 +10,7 @@ import Sidebar from '@/components/elements/Sidebar'
 import Navbar from '@/components/elements/navbar'
 import TaskModal from '@/components/elements/taskModal'
 
-import { useTasks } from '@/hooks/useTasks'
-import { useUsers } from '@/hooks/useUsers'
+import { useTasks, useUsers } from '@/hooks/index'
 import { formatDate } from '@/utils/dateFormatter'
 import { groupTasksByStatus, columns } from '@/utils/taskUtils'
 
