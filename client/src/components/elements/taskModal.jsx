@@ -81,7 +81,7 @@ const TaskModal = ({ open, users, type, onOpenChange, onSubmit }) => {
               <SelectContent className="bg-slate-400">
                 <SelectItem className="hover:bg-slate-500" value="in_progress">En Progreso</SelectItem>
                 <SelectItem className="hover:bg-slate-500" value="paused">Pausada</SelectItem>
-                <SelectItem className="hover:bg-slate-500" value="revision">En Revisión</SelectItem>
+                <SelectItem className="hover:bg-slate-500" value="in_revision">En Revisión</SelectItem>
                 <SelectItem className="hover:bg-slate-500" value="done">Completada</SelectItem>
               </SelectContent>
             </Select>

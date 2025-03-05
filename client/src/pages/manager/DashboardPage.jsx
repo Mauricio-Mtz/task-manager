@@ -7,6 +7,7 @@ import Navbar from '@/components/elements/navbar'
 
 function DashboardPage() {
   const [userData, setUserData] = useState(null)
+  
   useEffect(() => {
     // Obtener la información del usuario del localStorage
     const userDataStr = localStorage.getItem('user')
@@ -15,6 +16,7 @@ function DashboardPage() {
       setUserData(parsedData)
     }
   }, [])
+
   // Funcion flecha para formatear la fecha a un lenguaje mas común
   const formatDate = (dateString) => {
     if (!dateString) return 'No disponible'
@@ -52,6 +54,10 @@ function DashboardPage() {
                 <div className="flex justify-between items-center">
                   <h2 className="text-2xl font-bold">Correo:</h2>
                   <h3 className="text-xl">{userData.email}</h3>
+                </div>
+                <div className="flex justify-between items-center">
+                  <h2 className="text-2xl font-bold">Tipo:</h2>
+                  <h3 className="text-xl">{userData.type}</h3>
                 </div>
                 <div className="flex justify-between items-center">
                   <h2 className="text-2xl font-bold">Último acceso:</h2>

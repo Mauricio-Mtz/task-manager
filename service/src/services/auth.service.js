@@ -31,9 +31,7 @@ class AuthService {
   // Función para crear un usuario
   async createUser(userData) {
     try {
-      console.log(userData)
       const user = new User(userData)
-      console.log(user)
       return await user.save()
     } catch (error) {
       throw new Error('Error al crear usuario: ' + error.message)

@@ -7,10 +7,10 @@ class AuthController {
   // Registro de usuario
   async register(req, res) {
     try {
-      const { email, password, username } = req.body;
+      const { email, password, username, type } = req.body;
 
       // Validación de campos requeridos
-      if (!email || !password || !username) {
+      if (!email || !password || !username || !type) {
         return res.status(400).json({ 
           success: false, 
           error: 'Todos los campos son requeridos' 
@@ -44,6 +44,7 @@ class AuthController {
         email: email,
         password: hashedPassword,
         username: username,
+        type: type,
       };
 
       const newUser = await authService.createUser(userData);
@@ -99,7 +100,8 @@ class AuthController {
       const token = jwt.sign(
         { 
           userId: user._id,
-          email: user.email
+          email: user.email,
+          type: user.type
         },
         JWT_SECRET,
         { expiresIn: '24h' }
@@ -114,6 +116,7 @@ class AuthController {
         _id: user._id,
         username: user.username,
         email: user.email,
+        type: user.type,
         created_at: user.created_at,
         last_login: user.last_login
       };

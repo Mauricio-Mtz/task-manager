@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '@/components/elements/navbar'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/index'
 
 function LoginPage() {
   const navigate = useNavigate()

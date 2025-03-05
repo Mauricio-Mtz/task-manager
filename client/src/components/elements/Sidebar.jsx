@@ -41,14 +41,14 @@ export function Sidebar() {
           <Button
             variant="outline"
             size="icon"
-            className="fixed top-20 left-4 bg-white hover:bg-accent"
+            className="fixed top-20 left-8 bg-slate-600 hover:bg-accent"
           >
-            <MenuIcon className="h-5 w-5" />
+            <MenuIcon className="h-5 w-5 text-slate-300"/>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[300px] bg-white">
+        <SheetContent side="left" className="w-[300px] bg-slate-600">
           <SheetHeader className="mb-6">
-            <SheetTitle className="text-2xl font-bold">Task Manager</SheetTitle>
+            <SheetTitle className="text-2xl font-bold text-slate-300">Task Manager</SheetTitle>
           </SheetHeader>
 
           <nav className="space-y-2">
@@ -56,7 +56,7 @@ export function Sidebar() {
               <Button
                 key={item.path}
                 variant={location.pathname === item.path ? 'default' : 'ghost'}
-                className="w-full justify-start gap-2 text-lg h-12"
+                className="w-full justify-start gap-2 text-lg h-12 hover:bg-slate-700 text-slate-300"
                 onClick={() => {
                   navigate(item.path)
                 }}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
+import { groupService } from '../services/groupService'
 
-// Hook personalizado para gestionar las funciones de grupos
 export const useGroups = () => {
   // Estado para almacenar los grupos en los que el usuario está inscrito
   const [userGroups, setUserGroups] = useState([])
@@ -12,24 +12,10 @@ export const useGroups = () => {
   // Función para obtener los grupos en los que el usuario está inscrito
   const fetchUserGroups = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(
-        'http://localhost:3000/groups/listGroupsByUser',
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      const data = await response.json()
+      const data = await groupService.getUserGroups()
 
-      if (response.ok) {
-        if (data.success) {
-          setUserGroups(data.group) // Almacena los grupos en el estado
-        } else {
-          setError(data.error || 'Error al obtener los grupos')
-        }
+      if (data.success) {
+        setUserGroups(data.group)
       } else {
         setError(data.error || 'Error al obtener los grupos')
       }
@@ -42,20 +28,10 @@ export const useGroups = () => {
   // Función para obtener los grupos creados por el usuario
   const fetchCreatedGroups = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(
-        'http://localhost:3000/groups/listGroupsByCreator',
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      const data = await response.json()
+      const data = await groupService.getCreatedGroups()
 
-      if (response.ok) {
-        setCreatedGroups(data.groups) // Almacena los grupos creados en el estado
+      if (data.groups) {
+        setCreatedGroups(data.groups)
       } else {
         setError(data.error || 'Error al obtener los grupos')
       }
@@ -70,24 +46,15 @@ export const useGroups = () => {
     try {
       const userStr = localStorage.getItem('user')
       const user = JSON.parse(userStr)
-      const token = localStorage.getItem('token')
 
-      const response = await fetch('http://localhost:3000/groups/create', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nameGroup: groupData.name_group,
-          description: groupData.description,
-          creatorId: user._id, // ID del usuario creador
-        }),
-      })
-      const data = await response.json()
+      const data = await groupService.createGroup(
+        groupData.name_group,
+        groupData.description,
+        user._id
+      )
 
-      if (response.ok) {
-        await fetchCreatedGroups() // Actualiza la lista de grupos creados
+      if (data.success) {
+        await fetchCreatedGroups()
         return true
       } else {
         setError(data.error || 'Error al crear el grupo')
@@ -103,22 +70,10 @@ export const useGroups = () => {
   // Función para inscribirse en un grupo usando un código de invitación
   const handleEnrollGroup = async (enrollData) => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/groups/enroll', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          code: enrollData.code // Código del grupo
-        })
-      })
+      const data = await groupService.enrollGroup(enrollData.code)
 
-      const data = await response.json()
-
-      if (response.ok) {
-        await fetchUserGroups() // Actualiza la lista de grupos en los que está el usuario
+      if (data.success) {
+        await fetchUserGroups()
         return true
       } else {
         setError(data.error || 'Error al enrolar en el grupo')
@@ -134,22 +89,10 @@ export const useGroups = () => {
   // Función para eliminar un grupo creado por el usuario
   const handleDeleteGroup = async (groupId) => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:3000/groups/delete`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          groupId, // ID del grupo a eliminar
-        }),
-      })
+      const data = await groupService.deleteGroup(groupId)
 
-      const data = await response.json()
-
-      if (response.ok) {
-        await fetchCreatedGroups() // Actualiza la lista de grupos creados
+      if (data.success) {
+        await fetchCreatedGroups()
         return true
       } else {
         setError(data.error || 'Error al eliminar el grupo')
@@ -168,7 +111,6 @@ export const useGroups = () => {
     fetchUserGroups()
   }, [])
 
-  // Retorna los grupos del usuario, los grupos creados, errores y funciones para gestionar los grupos
   return {
     userGroups,
     createdGroups,
