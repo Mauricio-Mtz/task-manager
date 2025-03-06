@@ -1,16 +1,10 @@
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-  Outlet,
-} from 'react-router-dom'
-import Landing from '@/pages/LandingPage'
-import Login from '@/pages/auth/LoginPage'
-import RegisterPage from '@/pages/auth/RegisterPage'
-import Dashboard from '@/pages/Manager/DashboardPage'
-import Tasks from '@/pages/Manager/TasksPage'
-import Groups from '@/pages/Manager/GroupsPage'
+import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom'
+import Landing from './pages/LandingPage'
+import Login from './pages/auth/LoginPage'
+import RegisterPage from './pages/auth/RegisterPage'
+import Dashboard from './pages/Manager/DashboardPage'
+import Tasks from './pages/Manager/TasksPage'
+import Groups from './pages/Manager/GroupsPage'
 import './App.css'
 
 // Componente de Ruta Protegida
