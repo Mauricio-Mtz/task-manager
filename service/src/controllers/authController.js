@@ -4,6 +4,32 @@ const authService = require('../services/auth.service');
 const { JWT_SECRET } = require('../../config/constants');
 
 class AuthController {
+  async main(req, res) {
+    try {
+      res.send(`
+        <html>
+          <head>
+            <title>API de Autenticación</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 40px; }
+              h1 { color: #333; }
+              .endpoint { margin-bottom: 10px; }
+            </style>
+          </head>
+          <body>
+            <h1>API de Autenticación</h1>
+            <p>Endpoints disponibles:</p>
+            <div class="endpoint"><strong>Registro:</strong> POST /auth/register</div>
+            <div class="endpoint"><strong>Login:</strong> POST /auth/login</div>
+            <div class="endpoint"><strong>Refresh Token:</strong> POST /auth/refresh-token</div>
+          </body>
+        </html>
+      `);
+    } catch (error) {
+      res.status(500).send('Error interno del servidor');
+    }
+  }
+
   // Registro de usuario
   async register(req, res) {
     try {
