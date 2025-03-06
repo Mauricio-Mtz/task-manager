@@ -16,6 +16,9 @@ export default defineConfig({
     historyApiFallback: true
   },
   preview: {
+    allowedHosts: [
+      'task-manager-client-h2i0.onrender.com',
+    ],
     port: 10000,
     host: '0.0.0.0',
     historyApiFallback: true
