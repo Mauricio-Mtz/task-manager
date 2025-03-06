@@ -100,6 +100,12 @@ export const useTasks = (groupId) => {
   // Ejecuta fetchTasks cuando cambia el groupId para actualizar las tareas
   useEffect(() => {
     fetchTasks()
+    const interval = setInterval(() => {
+      fetchTasks();
+    }, 3000);
+    return () => {
+      clearInterval(interval);
+    };
   }, [groupId])
 
   return {
