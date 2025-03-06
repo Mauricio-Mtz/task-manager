@@ -12,11 +12,18 @@ export default defineConfig({
   },
   server: {
     port: 10000,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    historyApiFallback: true
   },
   preview: {
     port: 10000,
     host: '0.0.0.0',
-    allowedHosts: ['task-manager-client-h2i0.onrender.com']
+    historyApiFallback: true
+  },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    emptyOutDir: true,
+    sourcemap: false
   }
 })
