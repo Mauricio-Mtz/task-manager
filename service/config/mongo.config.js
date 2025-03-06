@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Conexión a la base de datos
-const mongoDb = mongoose.createConnection('mongodb://localhost:27017/task_manager', {
+const mongoDb = mongoose.createConnection('mongodb+srv://2022371199:BTEU4sBy1MLTAXjm@task-manager.1z4y8.mongodb.net/?retryWrites=true&w=majority&appName=task-manager', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });

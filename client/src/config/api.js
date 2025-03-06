@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Crear una instancia de Axios con configuración personalizada
 export const apiClient = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://task-manager-service.vercel.app/',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
